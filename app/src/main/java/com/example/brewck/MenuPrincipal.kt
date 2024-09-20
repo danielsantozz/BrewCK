@@ -96,10 +96,8 @@ class MenuPrincipal : AppCompatActivity() {
         criarCanalDeNotificacao()
         verificarNotificacao()
 
-        // Emitir alerta toda vez que onCreate for chamado
         emitirAlerta()
 
-        // Verificar permissão para notificações e solicitar se necessário
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_NOTIFICATION_PERMISSION)
@@ -110,7 +108,6 @@ class MenuPrincipal : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         atualizarContagens()
-        // Verificar a notificação sem emitir alerta novamente
         verificarNotificacao()
     }
 
@@ -127,16 +124,6 @@ class MenuPrincipal : AppCompatActivity() {
             with(sharedPreferences.edit()) {
                 putInt("contagem_sujos", contagemSujos)
                 apply()
-            }
-
-            contarTotalBarris { totalCount ->
-                if (totalCount > 0) {
-                    val percentualSujos = (sujosCount.toDouble() / totalCount) * 100
-                    if (percentualSujos >= 50) {
-                        // Emitir alerta apenas no onCreate
-                        // A verificação do alerta emitido é feita em emitirAlerta
-                    }
-                }
             }
         }
 
@@ -243,11 +230,10 @@ class MenuPrincipal : AppCompatActivity() {
             this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Definindo o alarme para disparar a cada 12 horas
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis() + 12 * 60 * 60 * 1000, // Inicia após 12 horas
-            12 * 60 * 60 * 1000, // Repete a cada 12 horas
+            System.currentTimeMillis() + 12 * 60 * 60 * 1000,
+            12 * 60 * 60 * 1000,
             pendingIntent
         )
     }
@@ -263,7 +249,6 @@ class MenuPrincipal : AppCompatActivity() {
             )
 
             if (pendingIntent == null) {
-                // Agendar a notificação se não estiver já agendada
                 agendarNotificacaoDiaria()
             }
         }
@@ -273,9 +258,8 @@ class MenuPrincipal : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_NOTIFICATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permissão concedida
+                verificarNotificacao()
             } else {
-                // Permissão negada
                 Toast.makeText(this, "Permissão de notificações negada.", Toast.LENGTH_SHORT).show()
             }
         }

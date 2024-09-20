@@ -15,7 +15,7 @@ class ClienteAdapter(
     private val clickListener: (Cliente) -> Unit
 ) : RecyclerView.Adapter<ClienteAdapter.ClienteViewHolder>() {
 
-    // Instância do Firestore
+    
     private val firestore = FirebaseFirestore.getInstance()
 
     class ClienteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -38,14 +38,14 @@ class ClienteAdapter(
         holder.barrilCliente.text = cliente.barril
         holder.enderecoCliente.text = cliente.endereco
 
-        // Definir a imagem de acordo com a avaliação
+        
         when (cliente.avaliacao) {
-            "Bom" -> holder.imgCliente.setImageResource(R.drawable.usergreen) // Icone para "Bom"
-            "Ruim" -> holder.imgCliente.setImageResource(R.drawable.userred)   // Icone para "Ruim"
-            else -> holder.imgCliente.setImageResource(R.drawable.user) // Ícone padrão
+            "Bom" -> holder.imgCliente.setImageResource(R.drawable.usergreen) 
+            "Ruim" -> holder.imgCliente.setImageResource(R.drawable.userred)   
+            else -> holder.imgCliente.setImageResource(R.drawable.user) 
         }
 
-        // Ação de clique no item
+        
         holder.itemView.setOnClickListener {
             Log.d("ClienteAdapter", "Card clicado: ${cliente.nome}")
             clickListener(cliente)
@@ -54,13 +54,13 @@ class ClienteAdapter(
 
     override fun getItemCount() = clientes.size
 
-    // Método para atualizar a lista de clientes
+    
     fun updateClientes(novosClientes: List<Cliente>) {
         this.clientes = novosClientes
         notifyDataSetChanged()
     }
 
-    // Função para formatar o CPF
+    
     fun formatarCPF(cpf: String): String {
         return if (cpf.length == 11) {
             cpf.substring(0, 3) + "." +

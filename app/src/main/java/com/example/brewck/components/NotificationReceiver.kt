@@ -17,7 +17,7 @@ class NotificationReceiver : BroadcastReceiver() {
         if (contagemSujos > 0) {
             val channelId = "barris_notification_channel"
 
-            // Verifique se a permissão de exibição de notificações foi concedida
+            
             val notificationManager = NotificationManagerCompat.from(context)
             if (notificationManager.areNotificationsEnabled()) {
                 val notificationIntent = Intent(context, MenuPrincipal::class.java)
@@ -37,8 +37,8 @@ class NotificationReceiver : BroadcastReceiver() {
 
                 notificationManager.notify(1, notification)
             } else {
-                // Se as notificações não estão habilitadas, você pode querer informar o usuário
-                // ou tratar a situação de outra maneira.
+                
+                
             }
         }
     }

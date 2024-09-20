@@ -82,7 +82,7 @@ class FirebaseRepository {
         auth.createUserWithEmailAndPassword(email, senha)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Usuário criado com sucesso, agora adiciona informações adicionais no Firestore
+                    
                     val userId = auth.currentUser?.uid
                     if (userId != null) {
                         val userMap = hashMapOf(

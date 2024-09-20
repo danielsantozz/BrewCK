@@ -76,13 +76,13 @@ class EditarBarril : AppCompatActivity() {
             return false
         }
 
-        // Verifica se o nome possui no máximo 100 caracteres
+        
         if (nome.length > 100) {
             Toast.makeText(this, "Nome deve ter no máximo 100 caracteres.", Toast.LENGTH_SHORT).show()
             return false
         }
 
-        // Verifica se a capacidade possui no máximo 4 caracteres
+        
         if (capacidadeText.length > 4) {
             Toast.makeText(this, "Capacidade deve ter no máximo 4 caracteres.", Toast.LENGTH_SHORT).show()
             return false

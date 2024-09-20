@@ -25,7 +25,7 @@ class DetalhesCliente : AppCompatActivity() {
     private lateinit var btnAvaliarBom: ImageButton
     private lateinit var btnAvaliarRuim: ImageButton
 
-    // Instância do Firestore
+    
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,11 +64,11 @@ class DetalhesCliente : AppCompatActivity() {
         txtBarrilCliente.text = barril
         txtEnderecoCliente.text = endereco
 
-        // Atualiza a imagem do cliente com base na avaliação
+        
         when (avaliacao) {
             "Bom" -> imgCliente.setImageResource(R.drawable.usergreen)
             "Ruim" -> imgCliente.setImageResource(R.drawable.userred)
-            else -> imgCliente.setImageResource(R.drawable.user) // Ícone padrão se não houver avaliação
+            else -> imgCliente.setImageResource(R.drawable.user) 
         }
 
         btnEditar.setOnClickListener {
@@ -94,7 +94,7 @@ class DetalhesCliente : AppCompatActivity() {
             }
         }
 
-        // Resetar avaliação ao clicar na imagem do cliente
+        
         imgCliente.setOnClickListener {
             if (id != null) {
                 resetarAvaliacao(id)
@@ -103,7 +103,7 @@ class DetalhesCliente : AppCompatActivity() {
     }
 
     private fun avaliarCliente(avaliacao: String, clienteId: String) {
-        // Atualiza a avaliação no Firestore
+        
         val clienteRef = firestore.collection("clientes").document(clienteId)
 
         clienteRef.update("avaliacao", avaliacao)
@@ -120,12 +120,12 @@ class DetalhesCliente : AppCompatActivity() {
     }
 
     private fun resetarAvaliacao(clienteId: String) {
-        // Reseta a avaliação para ""
+        
         val clienteRef = firestore.collection("clientes").document(clienteId)
 
         clienteRef.update("avaliacao", "")
             .addOnSuccessListener {
-                imgCliente.setImageResource(R.drawable.user) // Define o ícone padrão
+                imgCliente.setImageResource(R.drawable.user) 
                 Toast.makeText(this, "Avaliação resetada", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { e ->

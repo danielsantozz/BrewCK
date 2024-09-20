@@ -114,7 +114,7 @@ class EditarCliente : AppCompatActivity() {
         val newCPF = edtClienteCPF.text.toString()
         val newEndereco = edtClienteEndereco.text.toString()
 
-        // Obtém o barril selecionado no Spinner
+        
         val barrilSelecionado = spinnerBarris.selectedItem.toString()
 
         firebaseRepository.atualizarCliente(id, newNome, newCPF, barrilSelecionado, newEndereco) { sucesso ->
@@ -176,7 +176,7 @@ class EditarCliente : AppCompatActivity() {
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinnerBarris.adapter = adapter
 
-                        // Preencher o Spinner com o barril atual do cliente (se houver)
+                        
                         val barrilAtual = intent.getStringExtra("barril")
                         val position = barrilNomes.indexOf(barrilAtual)
                         if (position >= 0) {

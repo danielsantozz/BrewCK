@@ -45,7 +45,7 @@ class Clientes : AppCompatActivity() {
             insets
         }
 
-        // Configurar spinner
+        
         spinnerFiltro = findViewById(R.id.spinnerFiltro)
         val adapter = ArrayAdapter.createFromResource(
             this,
@@ -55,7 +55,7 @@ class Clientes : AppCompatActivity() {
         adapter.setDropDownViewResource(R.layout.spinner_item_text)
         spinnerFiltro.adapter = adapter
 
-        // Outros componentes
+        
         btnVoltar = findViewById(R.id.btnVoltarCliente)
         btnVoltar.setOnClickListener { finish() }
 
@@ -119,10 +119,10 @@ class Clientes : AppCompatActivity() {
 
                         listaClientes.sortBy { it.second.nome }
 
-                        // Log a lista de clientes
+                        
                         Log.d("Clientes", "Lista de clientes: $listaClientes")
 
-                        // Inicialize o clienteAdapter aqui
+                        
                         clienteAdapter = ClienteAdapter(listaClientes.map { it.second }) { perfil ->
                             val intent = Intent(this, DetalhesCliente::class.java)
                             intent.putExtra("id", listaClientes.find { it.second == perfil }?.first)
@@ -156,7 +156,7 @@ class Clientes : AppCompatActivity() {
         val filteredClientes = listaClientes.filter {
             val matchesNome = it.second.nome.contains(nomeFiltro, ignoreCase = true)
             val matchesAvaliacao = when (avaliacaoFiltro) {
-                null, "", "Todos" -> true // Aceita qualquer avaliação se "Todos" ou vazio
+                null, "", "Todos" -> true 
                 else -> it.second.avaliacao == avaliacaoFiltro
             }
             matchesNome && matchesAvaliacao

@@ -37,7 +37,7 @@ class DetalhesBarril : AppCompatActivity() {
             insets
         }
 
-        // Recebe dados da Intent
+        
         barrilId = intent.getStringExtra("id") ?: ""
         val nome = intent.getStringExtra("nome")
         val capacidade = intent.getIntExtra("capacidade", 0)
@@ -46,7 +46,7 @@ class DetalhesBarril : AppCompatActivity() {
         val liquido = intent.getStringExtra("liquido")
         isFavorito = intent.getBooleanExtra("favorito", false)
 
-        // Inicializa views
+        
         txtNomeBarril = findViewById(R.id.txtDetNomeBarril)
         txtCapacidadeBarril = findViewById(R.id.txtDetCapacidade)
         txtProprietarioBarril = findViewById(R.id.txtDetProprietario)
@@ -57,14 +57,14 @@ class DetalhesBarril : AppCompatActivity() {
         btnFavorito = findViewById(R.id.btnFavorito)
         btnVoltar = findViewById(R.id.btnVoltar)
 
-        // Configura textos
+        
         txtNomeBarril.text = nome
         txtCapacidadeBarril.text = capacidade.toString()
         txtProprietarioBarril.text = proprietario
         txtStatusBarril.text = status
         txtLiquidoBarril.text = liquido
 
-        // Atualiza imagem do botão favorito
+        
         atualizarImagemFavorito()
 
         btnFavorito.setOnClickListener {
@@ -88,9 +88,9 @@ class DetalhesBarril : AppCompatActivity() {
         }
 
         val imgFav = if (isFavorito) {
-            R.drawable.favorite // Substitua pelo seu ícone de favorito
+            R.drawable.favorite 
         } else {
-            R.drawable.unfavorite // Substitua pelo seu ícone de desfavorito
+            R.drawable.unfavorite 
         }
 
         if (isFavorito) {
@@ -101,9 +101,9 @@ class DetalhesBarril : AppCompatActivity() {
 
     private fun atualizarImagemFavorito() {
         val drawableResId = if (isFavorito) {
-            R.drawable.favorite // Substitua pelo seu ícone de favorito
+            R.drawable.favorite 
         } else {
-            R.drawable.unfavorite // Substitua pelo seu ícone de desfavorito
+            R.drawable.unfavorite 
         }
         btnFavorito.setImageResource(drawableResId)
         atualizarFavoritoNoFirestore(isFavorito)

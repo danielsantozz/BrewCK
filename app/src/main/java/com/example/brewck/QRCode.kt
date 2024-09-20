@@ -32,7 +32,7 @@ class QRCode : AppCompatActivity() {
 
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var btnVoltar: Button
-    private var qrCodeProcessed = false // Flag to prevent multiple activations
+    private var qrCodeProcessed = false 
 
     private val requestPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
@@ -85,7 +85,7 @@ class QRCode : AppCompatActivity() {
     @OptIn(ExperimentalGetImage::class)
     private fun processImageProxy(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
-        if (mediaImage != null && !qrCodeProcessed) { // Check the flag
+        if (mediaImage != null && !qrCodeProcessed) { 
             val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             val scannerOptions = BarcodeScannerOptions.Builder()
                 .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
@@ -97,11 +97,11 @@ class QRCode : AppCompatActivity() {
                     for (barcode in barcodes) {
                         val rawValue = barcode.rawValue
                         Log.d("QRCode", "QR Code detected: $rawValue")
-                        qrCodeProcessed = true // Set the flag to true
+                        qrCodeProcessed = true 
                         val intent = Intent(this, post_qrcode::class.java)
                         intent.putExtra("qrcode", rawValue)
                         startActivity(intent)
-                        // Optionally, you might want to stop camera analysis or take other actions here
+                        
                     }
                 }
                 .addOnFailureListener {
