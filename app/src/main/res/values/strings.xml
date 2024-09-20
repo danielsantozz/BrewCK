@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BrewCK</string>
+    <string name="default_web_client_id">212585261759-3a9lp0a1c303dko1t0pj95scdvvbn0sv.apps.googleusercontent.com</string>
+    <string-array name="avaliacoes">
+        <item>Todos</item>
+        <item>Bom</item>
+        <item>Ruim</item>
+    </string-array>
+</resources>
