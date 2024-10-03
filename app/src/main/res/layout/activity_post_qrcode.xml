@@ -6,18 +6,150 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ededed"
-    tools:context=".post_qrcode">
+    tools:context=".PostQRCode">
 
     <TextView
-        android:id="@+id/txtQRCode"
+        android:id="@+id/txtQRNomeBarril"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/agrandir_textbold"
+        android:text="NomeBarril"
+        android:textColor="#000000"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo2" />
+
+    <Button
+        android:id="@+id/btnVoltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        android:backgroundTint="#FF914D"
+        android:fontFamily="@font/agrandir_textbold"
+        android:text="VOLTAR"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:cornerRadius="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgBarril"
+        android:layout_width="170dp"
+        android:layout_height="131dp"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtQRNomeBarril"
+        app:srcCompat="@drawable/beerkeg_black"
+        tools:srcCompat="@drawable/beerkeg_black" />
+
+    <ImageView
+        android:id="@+id/logo2"
+        android:layout_width="201dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/brewck_logo"
+        tools:srcCompat="@drawable/brewck_logo" />
+
+    <TextView
+        android:id="@+id/txtCapacidade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/agrandir_regular"
-        android:text="TextView"
+        android:text="30L"
         android:textColor="#000000"
-        android:textSize="20sp"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toEndOf="@+id/imgBarril"
+        app:layout_constraintTop_toBottomOf="@+id/btnVoltar" />
+
+    <TextView
+        android:id="@+id/txtStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/agrandir_regular"
+        android:text="status"
+        android:textColor="#000000"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgBarril" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtStatus">
+
+        <Button
+            android:id="@+id/btnEncher"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#101010"
+            android:fontFamily="@font/agrandir_textbold"
+            android:text="ENCHER"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:cornerRadius="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnVender"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:backgroundTint="#2E7000"
+            android:fontFamily="@font/agrandir_textbold"
+            android:text="VENDER"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:cornerRadius="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btnPegar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#AA4A01"
+            android:fontFamily="@font/agrandir_textbold"
+            android:text="PEGAR"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:cornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnVender" />
+
+        <Button
+            android:id="@+id/btnLimpar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#0099BF"
+            android:fontFamily="@font/agrandir_textbold"
+            android:text="LIMPAR"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:cornerRadius="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnPegar"
+            app:layout_constraintTop_toBottomOf="@+id/btnVender" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

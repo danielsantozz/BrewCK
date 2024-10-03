@@ -160,8 +160,8 @@ class Barris : AppCompatActivity() {
             "No Cliente" -> barrisFiltradosPorNome.filter { it.status == "No Cliente" }
             "Sujo" -> barrisFiltradosPorNome.filter { it.status == "Sujo" }
             "Limpo" -> barrisFiltradosPorNome.filter { it.status == "Limpo" }
-            "Favoritos" -> barrisFiltradosPorNome.filter { it.isFavorite } // Filtra os favoritos
-            else -> barrisFiltradosPorNome // "Todos"
+            "Favoritos" -> barrisFiltradosPorNome.filter { it.isFavorite }
+            else -> barrisFiltradosPorNome
         }
 
         barrilAdapter.updateBarris(barrisFiltradosPorStatus)

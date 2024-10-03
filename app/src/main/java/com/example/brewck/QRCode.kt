@@ -19,8 +19,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.common.InputImage
@@ -98,8 +96,8 @@ class QRCode : AppCompatActivity() {
                         val rawValue = barcode.rawValue
                         Log.d("QRCode", "QR Code detected: $rawValue")
                         qrCodeProcessed = true 
-                        val intent = Intent(this, post_qrcode::class.java)
-                        intent.putExtra("qrcode", rawValue)
+                        val intent = Intent(this, PostQRCode::class.java)
+                        intent.putExtra("id", rawValue)
                         startActivity(intent)
                         
                     }
