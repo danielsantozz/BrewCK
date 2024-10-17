@@ -6,15 +6,13 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.brewck.controllers.DetalhesClienteController
 
 class DetalhesCliente : AppCompatActivity() {
-
     private lateinit var txtNomeCliente: TextView
     private lateinit var txtCPFCliente: TextView
     private lateinit var txtBarrilCliente: TextView
@@ -25,8 +23,7 @@ class DetalhesCliente : AppCompatActivity() {
     private lateinit var btnAvaliarBom: ImageButton
     private lateinit var btnAvaliarRuim: ImageButton
 
-    
-    private val firestore = FirebaseFirestore.getInstance()
+    private lateinit var controller: DetalhesClienteController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +34,8 @@ class DetalhesCliente : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        controller = DetalhesClienteController(this)
 
         val id = intent.getStringExtra("id")
         val nome = intent.getStringExtra("nome")
@@ -64,11 +63,10 @@ class DetalhesCliente : AppCompatActivity() {
         txtBarrilCliente.text = barril
         txtEnderecoCliente.text = endereco
 
-        
         when (avaliacao) {
             "Bom" -> imgCliente.setImageResource(R.drawable.usergreen)
             "Ruim" -> imgCliente.setImageResource(R.drawable.userred)
-            else -> imgCliente.setImageResource(R.drawable.user) 
+            else -> imgCliente.setImageResource(R.drawable.user)
         }
 
         btnEditar.setOnClickListener {
@@ -84,52 +82,20 @@ class DetalhesCliente : AppCompatActivity() {
 
         btnAvaliarBom.setOnClickListener {
             if (id != null) {
-                avaliarCliente("Bom", id)
+                controller.avaliarCliente("Bom", id, imgCliente)
             }
         }
 
         btnAvaliarRuim.setOnClickListener {
             if (id != null) {
-                avaliarCliente("Ruim", id)
+                controller.avaliarCliente("Ruim", id, imgCliente)
             }
         }
 
-        
         imgCliente.setOnClickListener {
             if (id != null) {
-                resetarAvaliacao(id)
+                controller.resetarAvaliacao(id, imgCliente)
             }
         }
-    }
-
-    private fun avaliarCliente(avaliacao: String, clienteId: String) {
-        
-        val clienteRef = firestore.collection("clientes").document(clienteId)
-
-        clienteRef.update("avaliacao", avaliacao)
-            .addOnSuccessListener {
-                when (avaliacao) {
-                    "Bom" -> imgCliente.setImageResource(R.drawable.usergreen)
-                    "Ruim" -> imgCliente.setImageResource(R.drawable.userred)
-                }
-                Toast.makeText(this, "Cliente avaliado como $avaliacao", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Falha ao atualizar avaliação: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-    }
-
-    private fun resetarAvaliacao(clienteId: String) {
-        
-        val clienteRef = firestore.collection("clientes").document(clienteId)
-
-        clienteRef.update("avaliacao", "")
-            .addOnSuccessListener {
-                imgCliente.setImageResource(R.drawable.user) 
-                Toast.makeText(this, "Avaliação resetada", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Falha ao resetar avaliação: ${e.message}", Toast.LENGTH_LONG).show()
-            }
     }
 }

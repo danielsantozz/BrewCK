@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application") version "8.1.3" apply false
+    id("com.android.application") version "8.4.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
     id("com.google.gms.google-services") version "4.4.2" apply false
 }
@@ -10,8 +10,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.0.2") // Atualize para a versão correta
-        classpath("com.google.gms:google-services:4.3.15") // Atualize para a versão correta
+        classpath("com.android.tools.build:gradle:8.4.0")
+        classpath("com.google.gms:google-services:4.4.2")
     }
 }
 

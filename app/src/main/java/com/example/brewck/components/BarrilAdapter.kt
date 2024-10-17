@@ -5,8 +5,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.brewck.R
+import com.example.brewck.models.Barril
 
-data class Barril(val nome: String, val capacidade: Int, val propriedade: String, val status: String, val liquido: String, val isFavorite: Boolean)
 
 class BarrilAdapter(
     private var barris: List<Barril>,
@@ -57,7 +57,7 @@ class BarrilAdapter(
     }
 
     fun updateBarris(newBarris: List<Barril>) {
-        barris = newBarris
+        barris = newBarris.sortedBy { it.nome.toLowerCase() }
         notifyDataSetChanged()
     }
 

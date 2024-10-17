@@ -1,22 +1,20 @@
 package com.example.brewck
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.auth.FirebaseAuth
+import com.example.brewck.controllers.RecuperarContaController
 
 class RecuperarConta : AppCompatActivity() {
-    lateinit var btnVoltar : Button
-    lateinit var edtEmail : EditText
-    lateinit var btnRecuperar : TextView
-    private lateinit var auth: FirebaseAuth
+    private lateinit var btnVoltar: Button
+    private lateinit var edtEmail: EditText
+    private lateinit var btnRecuperar: TextView
+    private lateinit var controller: RecuperarContaController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,34 +27,12 @@ class RecuperarConta : AppCompatActivity() {
         }
 
         edtEmail = findViewById(R.id.edtEmailRecuperacao)
-
         btnVoltar = findViewById(R.id.btnVoltarRecuperacao)
-        btnVoltar.setOnClickListener {
-            val intent2 = Intent(this, MainActivity::class.java)
-            startActivity(intent2)
-        }
-
         btnRecuperar = findViewById(R.id.btnRecuperarSenha)
-        btnRecuperar.setOnClickListener {
-                auth = FirebaseAuth.getInstance()
 
-                val email = edtEmail.text.toString().trim()
+        controller = RecuperarContaController(this)
 
-                if (email.isEmpty()) {
-                    Toast.makeText(this, "Por favor, insira seu e-mail", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-
-                auth.sendPasswordResetEmail(email)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Toast.makeText(this, "E-mail de recuperação enviado.", Toast.LENGTH_SHORT).show()
-                            val intent2 = Intent(this, MainActivity::class.java)
-                            startActivity(intent2)
-                        } else {
-                            Toast.makeText(this, "Erro ao enviar e-mail de recuperação.", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-        }
+        btnVoltar.setOnClickListener { controller.voltarParaMain() }
+        btnRecuperar.setOnClickListener { controller.recuperarConta(edtEmail) }
     }
 }

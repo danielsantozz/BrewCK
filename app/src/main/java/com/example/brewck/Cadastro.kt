@@ -1,6 +1,5 @@
 package com.example.brewck
 
-import FirebaseRepository
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -11,16 +10,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
+import com.example.brewck.controllers.CadastroController
 
 class Cadastro : AppCompatActivity() {
+
     private lateinit var btnEntrada : TextView
     private lateinit var edtCriaUsuario : EditText
     private lateinit var edtCriaSenha : EditText
     private lateinit var edtCriaEmail : EditText
     private lateinit var btnCadastrar : Button
-
-    private val repository = FirebaseRepository()
+    private val cadastroController = CadastroController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +32,6 @@ class Cadastro : AppCompatActivity() {
             insets
         }
 
-
-
         btnEntrada = findViewById(R.id.btnEntrada)
         btnEntrada.setOnClickListener {
             val intentMENU = Intent(this, MainActivity::class.java)
@@ -46,27 +43,21 @@ class Cadastro : AppCompatActivity() {
         edtCriaEmail = findViewById(R.id.edtCriaEmail)
         btnCadastrar = findViewById(R.id.btnCadastrar)
         btnCadastrar.setOnClickListener { cadastrar() }
-
-
     }
 
-    fun cadastrar() {
+    private fun cadastrar() {
         val newUsuario = edtCriaUsuario.text.toString()
         val newSenha = edtCriaSenha.text.toString()
         val newEmail = edtCriaEmail.text.toString()
 
-
-        repository.criarUsuario(newEmail, newSenha, newUsuario) { sucesso, mensagem ->
+        cadastroController.criarUsuario(newEmail, newSenha, newUsuario) { sucesso, mensagem ->
             if (sucesso) {
-                println("Usuário criado com sucesso!")
                 Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
                 val intent1 = Intent(this, MainActivity::class.java)
                 startActivity(intent1)
             } else {
-                println("Falha ao criar usuário: $mensagem")
                 Toast.makeText(this, "$mensagem", Toast.LENGTH_LONG).show()
             }
         }
-
     }
 }

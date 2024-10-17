@@ -1,29 +1,32 @@
 package com.example.brewck
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.brewck.controllers.PostQRCodeController
 
 class PostQRCode : AppCompatActivity() {
+    lateinit var txtNome: TextView
+    lateinit var txtCapacidade: TextView
+    lateinit var txtStatus: TextView
+    lateinit var imgBarril: ImageView
+    lateinit var btnVoltar: Button
+    lateinit var btnEncher: Button
+    lateinit var btnVender: Button
+    lateinit var btnPegar: Button
+    lateinit var btnLimpar: Button
 
-    private lateinit var txtNome: TextView
-    private lateinit var txtCapacidade: TextView
-    private lateinit var txtStatus: TextView
-    private lateinit var imgBarril: ImageView
-    private lateinit var btnVoltar: Button
-
-    private lateinit var btnEncher: Button
-    private lateinit var btnVender: Button
-    private lateinit var btnPegar: Button
-    private lateinit var btnLimpar: Button
+    private lateinit var controller: PostQRCodeController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,13 @@ class PostQRCode : AppCompatActivity() {
         txtStatus = findViewById(R.id.txtStatus)
         imgBarril = findViewById(R.id.imgBarril)
         btnVoltar = findViewById(R.id.btnVoltar)
+        btnEncher = findViewById(R.id.btnEncher)
+        btnVender = findViewById(R.id.btnVender)
+        btnPegar = findViewById(R.id.btnPegar)
+        btnLimpar = findViewById(R.id.btnLimpar)
+
+        controller = PostQRCodeController(this)
+
         btnVoltar.setOnClickListener {
             finish()
         }
@@ -47,89 +57,98 @@ class PostQRCode : AppCompatActivity() {
         val extras = intent.extras
         val id = extras?.getString("id")
 
-        btnEncher = findViewById(R.id.btnEncher)
         btnEncher.setOnClickListener {
             if (id != null) {
-                atualizarStatus(id, "Cheio")
-                buscarBarrilPorId(id)
-            }
-        }
-        btnVender = findViewById(R.id.btnVender)
-        btnVender.setOnClickListener {
-            if (id != null) {
-                atualizarStatus(id, "No Cliente")
-                buscarBarrilPorId(id)
-            }
-        }
-        btnPegar = findViewById(R.id.btnPegar)
-        btnPegar.setOnClickListener {
-            if (id != null) {
-                atualizarStatus(id, "Sujo")
-                buscarBarrilPorId(id)
-            }
-        }
-        btnLimpar = findViewById(R.id.btnLimpar)
-        btnLimpar.setOnClickListener {
-            if (id != null) {
-                atualizarStatus(id, "Limpo")
-                buscarBarrilPorId(id)
+                controller.buscarLiquidos { liquidos ->
+                    if (liquidos.isNotEmpty()) {
+                        mostrarDialogLiquidos(id, liquidos)
+                    } else {
+                        Toast.makeText(this, "Nenhum líquido encontrado.", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
-        if (id != null) {
-            buscarBarrilPorId(id)
-        } else {
+        btnVender.setOnClickListener {
+            if (id != null) {
+                controller.buscarClientes { clientes ->
+                    if (clientes.isNotEmpty()) {
+                        controller.buscarBarrilPorId(id) { barril ->
+                            barril?.let {
+                                mostrarDialogClientes(it.id, it.nome, clientes)
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Nenhum cliente encontrado.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        btnPegar.setOnClickListener {
+            if (id != null) {
+                controller.atualizarStatus(id, "Sujo") { success ->
+                    if (success) controller.buscarBarrilPorId(id) { controller.atualizarUI(it) }
+                }
+            }
+        }
+        btnLimpar.setOnClickListener {
+            if (id != null) {
+                controller.atualizarStatus(id, "Limpo") { success ->
+                    if (success) controller.buscarBarrilPorId(id) { controller.atualizarUI(it) }
+                }
+            }
+        }
+
+        id?.let {
+            controller.buscarBarrilPorId(it) { barril ->
+                controller.atualizarUI(barril)
+            }
+        } ?: run {
             Toast.makeText(this, "ID do barril não fornecido", Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun buscarBarrilPorId(barrilId: String) {
-        val firestore = FirebaseFirestore.getInstance()
+    private fun mostrarDialogLiquidos(barrilId: String, liquidos: List<String>) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_encher_barril, null)
+        val spinner = dialogView.findViewById<Spinner>(R.id.spinnerLiquidos)
 
-        val docRef = firestore.collection("barris").document(barrilId)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, liquidos)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
 
-        docRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
-                    val nome = document.getString("nome") ?: "Barril não encontrado"
-                    val capacidade = document.getLong("capacidade")?.toInt() ?: 0
-                    val status = document.getString("status") ?: "Desconhecido"
-
-                    txtNome.text = "${nome}"
-                    txtCapacidade.text = "$capacidade L"
-                    txtStatus.text = "$status"
-
-                    when(status) {
-                        "Cheio" -> imgBarril.setImageResource(R.drawable.beerkeg_black)
-                        "No Cliente" -> imgBarril.setImageResource(R.drawable.beerkegnocliente)
-                        "Sujo" -> imgBarril.setImageResource(R.drawable.beerkegsujo)
-                        "Limpo" -> imgBarril.setImageResource(R.drawable.beerkeglimpo)
-                    }
-                } else {
-                    Toast.makeText(this, "Barril não encontrado", Toast.LENGTH_SHORT).show()
-                }
+        AlertDialog.Builder(this)
+            .setTitle("Escolha um líquido")
+            .setView(dialogView)
+            .setPositiveButton("Encher") { _, _ ->
+                val liquidoSelecionado = spinner.selectedItem.toString()
+                controller.atualizarLiquidoDoBarril(barrilId, liquidoSelecionado)
             }
-            .addOnFailureListener { exception ->
-                Log.w("PostQRCode", "Erro ao buscar barril: ", exception)
-                Toast.makeText(this, "Erro ao buscar barril", Toast.LENGTH_SHORT).show()
-            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
 
-    fun atualizarStatus(barrilId: String, status: String) {
-        val firestore = FirebaseFirestore.getInstance()
+    private fun mostrarDialogClientes(barrilId: String, nomeBarril: String, clientes: List<String>) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_encher_barril, null)
+        val spinner = dialogView.findViewById<Spinner>(R.id.spinnerLiquidos)
 
-        val docRef = firestore.collection("barris").document(barrilId)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, clientes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
 
-        val data = hashMapOf<String, Any>(
-            "status" to status,
-        )
+        AlertDialog.Builder(this)
+            .setTitle("Escolha um cliente")
+            .setView(dialogView)
+            .setPositiveButton("Vender") { _, _ ->
+                val clienteSelecionado = spinner.selectedItem.toString()
 
-        docRef.update(data)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Barril atualizado com sucesso.", Toast.LENGTH_SHORT).show()
+                controller.atualizarClienteNoBarril(barrilId, clienteSelecionado)
+                controller.atualizarBarrilNoCliente(clienteSelecionado, nomeBarril, barrilId)
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
-            }
+            .setNegativeButton("Cancelar", null)
+            .show()
     }
+
+
+
 }

@@ -248,4 +248,26 @@
         app:layout_constraintStart_toStartOf="@+id/fundo"
         app:layout_constraintTop_toTopOf="@+id/fundo" />
 
+    <ImageView
+        android:id="@+id/imgConfig"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSair"
+        app:srcCompat="@drawable/gear"
+        tools:srcCompat="@drawable/gear" />
+
+    <ImageView
+        android:id="@+id/imgLiquido"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toStartOf="@+id/imgConfig"
+        app:layout_constraintTop_toBottomOf="@+id/btnSair"
+        app:srcCompat="@drawable/liquid"
+        tools:srcCompat="@drawable/liquid" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

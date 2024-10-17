@@ -7,8 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.brewck.R
-
-data class Cliente(val id: String, val nome: String, val cpf: String, val barril: String, val endereco: String, val avaliacao: String)
+import com.example.brewck.models.Cliente
 
 class ClienteAdapter(
     private var clientes: List<Cliente>,

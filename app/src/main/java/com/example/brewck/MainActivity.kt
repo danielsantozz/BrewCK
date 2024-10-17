@@ -1,6 +1,5 @@
 package com.example.brewck
 
-import FirebaseRepository
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -10,7 +9,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.example.brewck.controllers.LoginController
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,16 +19,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnCadastro: TextView
     private lateinit var btnRecuperar: TextView
     private lateinit var progressBar: ProgressBar
-
-    private lateinit var auth: FirebaseAuth
+    private val loginController = LoginController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        auth = FirebaseAuth.getInstance()
-
-        if (auth.currentUser != null) {
+        if (loginController.isUserLoggedIn()) {
             startActivity(Intent(this, MenuPrincipal::class.java))
             finish()
             return
@@ -53,12 +49,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun login() {
         showLoading(true)
-        val repository = FirebaseRepository()
 
         val email = edtUsuario.text.toString()
         val senha = edtSenha.text.toString()
 
-        repository.fazerLogin(email, senha) { sucesso, mensagem ->
+        loginController.fazerLogin(email, senha) { sucesso, mensagem ->
             showLoading(false)
             if (sucesso) {
                 Toast.makeText(this, "Login bem-sucedido!", Toast.LENGTH_SHORT).show()

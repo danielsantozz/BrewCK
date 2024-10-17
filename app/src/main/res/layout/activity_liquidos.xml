@@ -20,10 +20,10 @@
 
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:fontFamily="@font/agrandir_textbold"
-        android:text="Barris"
+        android:text="Líquidos"
         android:textColor="#000000"
         android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.195" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewBarris"
+        android:id="@+id/recyclerViewLiquido"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="15dp"
@@ -45,10 +45,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edtFiltroNome" />
+        app:layout_constraintTop_toBottomOf="@+id/edtFiltroLiquidos" />
 
     <Button
-        android:id="@+id/btnVoltarBarril"
+        android:id="@+id/btnVoltar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
@@ -63,18 +63,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/btnCadastrarBarril"
+        android:id="@+id/btnCadastrarLiquido"
         android:layout_width="47dp"
         android:layout_height="41dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/edtFiltroNome"
+        app:layout_constraintBottom_toTopOf="@+id/edtFiltroLiquidos"
         app:layout_constraintEnd_toStartOf="@+id/textView11"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6"
         app:srcCompat="@drawable/plus" />
 
     <EditText
-        android:id="@+id/edtFiltroNome"
+        android:id="@+id/edtFiltroLiquidos"
         android:layout_width="0dp"
         android:layout_height="38dp"
         android:layout_marginStart="40dp"
@@ -92,26 +92,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
-    <Spinner
-        android:id="@+id/spinnerFiltro"
-        android:layout_width="125dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/edtFiltroNome"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/btnVoltarBarril" />
-
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/recyclerViewBarris"
+        app:layout_constraintBottom_toBottomOf="@+id/recyclerViewLiquido"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/recyclerViewBarris"
-        app:layout_constraintTop_toTopOf="@+id/recyclerViewBarris" />
+        app:layout_constraintStart_toStartOf="@+id/recyclerViewLiquido"
+        app:layout_constraintTop_toTopOf="@+id/recyclerViewLiquido" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

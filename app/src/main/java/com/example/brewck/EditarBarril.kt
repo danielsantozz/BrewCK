@@ -1,29 +1,31 @@
 package com.example.brewck
 
-import FirebaseRepository
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.brewck.controllers.EditarBarrilController
 
 class EditarBarril : AppCompatActivity() {
-    private lateinit var edtBarrilNome : EditText
-    private lateinit var edtBarrilCapacidade : EditText
-    private lateinit var edtBarrilPropriedade : Spinner
-    private lateinit var edtBarrilStatus : Spinner
-    private lateinit var edtBarrilLiquido : EditText
-    private lateinit var btnVoltar : Button
-    private lateinit var btnEditar : Button
-    private lateinit var btnDeletar : Button
+    private lateinit var edtBarrilNome: EditText
+    private lateinit var edtBarrilCapacidade: EditText
+    private lateinit var edtBarrilPropriedade: Spinner
+    private lateinit var edtBarrilStatus: Spinner
+    private lateinit var edtBarrilLiquido: EditText
+    private lateinit var btnVoltar: Button
+    private lateinit var btnEditar: Button
+    private lateinit var btnDeletar: Button
+    private lateinit var controller: EditarBarrilController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editar_barril)
+
+        controller = EditarBarrilController(this)
 
         val nome = intent.getStringExtra("nome")
         val capacidade = intent.getIntExtra("capacidade", 0)
@@ -72,31 +74,27 @@ class EditarBarril : AppCompatActivity() {
         val capacidadeText = edtBarrilCapacidade.text.toString().trim()
 
         if (nome.isEmpty() || capacidadeText.isEmpty()) {
-            Toast.makeText(this, "Por favor, preencha todos os campos.", Toast.LENGTH_SHORT).show()
+            controller.mostrarMensagem("Por favor, preencha todos os campos.")
             return false
         }
 
-        
         if (nome.length > 100) {
-            Toast.makeText(this, "Nome deve ter no máximo 100 caracteres.", Toast.LENGTH_SHORT).show()
+            controller.mostrarMensagem("Nome deve ter no máximo 100 caracteres.")
             return false
         }
 
-        
         if (capacidadeText.length > 4) {
-            Toast.makeText(this, "Capacidade deve ter no máximo 4 caracteres.", Toast.LENGTH_SHORT).show()
+            controller.mostrarMensagem("Capacidade deve ter no máximo 4 caracteres.")
             return false
         }
 
         return true
     }
 
-    fun atualizarBarril() {
+    private fun atualizarBarril() {
         if (!validarCampos()) {
             return
         }
-
-        val firebaseRepository = FirebaseRepository()
 
         val id = intent.getStringExtra("id").toString()
         val newNome = edtBarrilNome.text.toString()
@@ -105,11 +103,11 @@ class EditarBarril : AppCompatActivity() {
         val newStatus = edtBarrilStatus.selectedItem.toString()
         val newLiquido = edtBarrilLiquido.text.toString()
 
-        firebaseRepository.atualizarBarril(id, newNome, newCapacidade, newPropriedade, newStatus, newLiquido) { sucesso ->
+        controller.atualizarBarril(id, newNome, newCapacidade, newPropriedade, newStatus, newLiquido) { sucesso ->
             if (sucesso) {
-                Toast.makeText(this, "Barril atualizado com sucesso", Toast.LENGTH_SHORT).show()
+                controller.mostrarMensagem("Barril atualizado com sucesso")
             } else {
-                Toast.makeText(this, "Erro ao atualizar barril", Toast.LENGTH_SHORT).show()
+                controller.mostrarMensagem("Erro ao atualizar barril")
             }
         }
 
@@ -118,15 +116,14 @@ class EditarBarril : AppCompatActivity() {
         finish()
     }
 
-    fun excluirBarril() {
-        val firebaseRepository = FirebaseRepository()
+    private fun excluirBarril() {
         val id = intent.getStringExtra("id").toString()
 
-        firebaseRepository.deletarBarril(id) { sucesso ->
+        controller.deletarBarril(id) { sucesso ->
             if (sucesso) {
-                Toast.makeText(this, "Barril excluído com sucesso", Toast.LENGTH_SHORT).show()
+                controller.mostrarMensagem("Barril excluído com sucesso")
             } else {
-                Toast.makeText(this, "Erro ao excluir barril", Toast.LENGTH_SHORT).show()
+                controller.mostrarMensagem("Erro ao excluir barril")
             }
         }
 
