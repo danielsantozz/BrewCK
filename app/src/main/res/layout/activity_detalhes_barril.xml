@@ -17,7 +17,7 @@
         android:layout_marginBottom="30dp"
         android:backgroundTint="#FF914D"
         android:fontFamily="@font/agrandir_textbold"
-        android:text="EDITAR BARRIL"
+        android:text="AÇÕES DO BARRIL"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:cornerRadius="5dp"
@@ -204,6 +204,15 @@
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtTituloNomeBarril" />
+
+        <ImageView
+            android:id="@+id/imgEditar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/editar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView

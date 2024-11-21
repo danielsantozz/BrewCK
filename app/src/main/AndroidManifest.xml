@@ -23,12 +23,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RoomDois"
         tools:targetApi="31">
+
         <activity
             android:name=".Liquidos"
             android:exported="false" />
+
         <activity
             android:name=".DetalhesBarril"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
+
         <activity
             android:name=".DetalhesCliente"
             android:exported="false" />

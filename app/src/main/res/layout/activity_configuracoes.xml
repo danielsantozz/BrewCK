@@ -48,7 +48,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:layout_height="451dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="#FF4D4D"
             android:fontFamily="@font/agrandir_textbold"
             android:text="Excluir Conta"
@@ -75,18 +76,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="30dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginBottom="50dp"
             android:backgroundTint="#FF914D"
             android:fontFamily="@font/agrandir_textbold"
             android:text="Alterar Senha"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:cornerRadius="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnExcluirConta"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnAlterarNome" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btnAlterarNome"
@@ -94,15 +95,60 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginBottom="20dp"
             android:backgroundTint="#FF914D"
             android:fontFamily="@font/agrandir_textbold"
             android:text="Alterar Nome"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:cornerRadius="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnAlterarSenha"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/btnAlterarNome"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/user" />
+
+            <TextView
+                android:id="@+id/txtNomeUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/agrandir_textbold"
+                android:text="NomeUser"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <TextView
+                android:id="@+id/txtEmailUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/agrandir_regular"
+                android:text="UserEmail"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtNomeUser" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

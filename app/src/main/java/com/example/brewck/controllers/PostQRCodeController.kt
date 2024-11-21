@@ -6,16 +6,20 @@ import com.example.brewck.PostQRCode
 import com.example.brewck.R
 import com.example.brewck.models.Barril
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PostQRCodeController(private val activity: PostQRCode) {
+    // Instância do FirebaseFirestore para interação com o Firestore
     private val firestore = FirebaseFirestore.getInstance()
 
+    // Função para buscar os dados do barril com base no ID
     fun buscarBarrilPorId(barrilId: String, onResult: (Barril?) -> Unit) {
         val docRef = firestore.collection("barris").document(barrilId)
 
         docRef.get()
             .addOnSuccessListener { document ->
+                // Verifica se o documento existe
                 if (document != null && document.exists()) {
                     val nome = document.getString("nome") ?: "Barril não encontrado"
                     val capacidade = document.getLong("capacidade")?.toInt() ?: 0
@@ -25,38 +29,51 @@ class PostQRCodeController(private val activity: PostQRCode) {
                     val isFavorite = document.getBoolean("isFavorite") ?: false
                     val cliente = document.getString("cliente") ?: ""
 
+                    // Retorna o barril encontrado
                     onResult(Barril(barrilId, nome, capacidade, propriedade, status, liquido, isFavorite, cliente))
                 } else {
                     onResult(null)
                 }
             }
             .addOnFailureListener { exception ->
+                // Log de erro caso falhe ao buscar o barril
                 Log.w("PostQRCode", "Erro ao buscar barril: ", exception)
                 onResult(null)
             }
     }
 
-    fun atualizarStatus(barrilId: String, status: String, onResult: (Boolean) -> Unit) {
+    // Função para atualizar o status do barril
+    fun atualizarStatusBarril(barrilId: String, nomeBarril: String, status: String, statusNovo: String, onResult: (Boolean) -> Unit) {
         val docRef = firestore.collection("barris").document(barrilId)
 
-        if (status == "Sujo") {
+        // Se o barril estiver "No Cliente", remove o cliente associado antes de atualizar
+        if (status == "No Cliente") {
+            removerBarrilCliente(nomeBarril) {
+                // Atualiza o status do barril
+                val data = hashMapOf<String, Any>(
+                    "status" to statusNovo,
+                    "liquido" to "Nenhum",
+                    "cliente" to ""
+                )
+                docRef.update(data)
+                    .addOnSuccessListener {
+                        Toast.makeText(activity, "Status do barril atualizado com sucesso!", Toast.LENGTH_SHORT).show()
+                        onResult(true)
+                    }
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(activity, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
+                        onResult(false)
+                    }
+            }
+        } else {
+            // Se o barril não estiver "No Cliente", apenas atualiza o status e líquido
             val data = hashMapOf<String, Any>(
-                "status" to status,
+                "status" to statusNovo,
                 "liquido" to "Nenhum"
             )
             docRef.update(data)
                 .addOnSuccessListener {
-                    onResult(true)
-                }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(activity, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
-                    onResult(false)
-                }
-        }
-        else {
-            val data = hashMapOf<String, Any>("status" to status)
-            docRef.update(data)
-                .addOnSuccessListener {
+                    Toast.makeText(activity, "Status do barril atualizado com sucesso!", Toast.LENGTH_SHORT).show()
                     onResult(true)
                 }
                 .addOnFailureListener { exception ->
@@ -66,12 +83,14 @@ class PostQRCodeController(private val activity: PostQRCode) {
         }
     }
 
+    // Função para atualizar a interface do usuário com os dados do barril
     fun atualizarUI(barril: Barril?) {
         barril?.let {
             activity.txtNome.text = it.nome
             activity.txtCapacidade.text = "${it.capacidade} L"
             activity.txtStatus.text = it.status
 
+            // Define a imagem do barril com base no status
             val imagemId = when (it.status) {
                 "Cheio" -> R.drawable.beerkeg_black
                 "No Cliente" -> R.drawable.beerkegnocliente
@@ -85,6 +104,7 @@ class PostQRCodeController(private val activity: PostQRCode) {
         }
     }
 
+    // Função para buscar os líquidos disponíveis
     fun buscarLiquidos(onResult: (List<String>) -> Unit) {
         val firestore = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
@@ -95,10 +115,12 @@ class PostQRCodeController(private val activity: PostQRCode) {
                 .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener { documents ->
+                    // Retorna uma lista com os nomes dos líquidos
                     val liquidos = documents.map { it.getString("nome") ?: "" }
                     onResult(liquidos)
                 }
                 .addOnFailureListener { e ->
+                    // Log de erro ao buscar os líquidos
                     Log.e("PostQRCode", "Erro ao buscar líquidos: ${e.message}", e)
                     onResult(emptyList())
                 }
@@ -108,21 +130,38 @@ class PostQRCodeController(private val activity: PostQRCode) {
         }
     }
 
-    fun atualizarLiquidoDoBarril(barrilId: String, liquido: String) {
+    // Função para atualizar o líquido de um barril
+    fun atualizarLiquidoDoBarril(barrilId: String, nomeBarril: String, liquido: String, status: String) {
         val docRef = FirebaseFirestore.getInstance().collection("barris").document(barrilId)
 
-        val data = hashMapOf<String, Any>("liquido" to liquido, "status" to "Cheio")
+        if (status == "No Cliente") {
+            removerBarrilCliente(nomeBarril) {
+                val data = hashMapOf<String, Any>("liquido" to liquido, "status" to "Cheio", "cliente" to "")
 
-        docRef.update(data)
-            .addOnSuccessListener {
-                Toast.makeText(activity, "Barril atualizado com o líquido $liquido", Toast.LENGTH_SHORT).show()
-                buscarBarrilPorId(barrilId) { atualizarUI(it) }
+                docRef.update(data)
+                    .addOnSuccessListener {
+                        Toast.makeText(activity, "Barril atualizado com o líquido $liquido", Toast.LENGTH_SHORT).show()
+                        buscarBarrilPorId(barrilId) { atualizarUI(it) }
+                    }
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(activity, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
+                    }
             }
-            .addOnFailureListener { exception ->
-                Toast.makeText(activity, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
-            }
+        } else {
+            val data = hashMapOf<String, Any>("liquido" to liquido, "status" to "Cheio", "cliente" to "")
+
+            docRef.update(data)
+                .addOnSuccessListener {
+                    Toast.makeText(activity, "Barril atualizado com o líquido $liquido", Toast.LENGTH_SHORT).show()
+                    buscarBarrilPorId(barrilId) { atualizarUI(it) }
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(activity, "Erro ao atualizar barril: ${exception.message}", Toast.LENGTH_LONG).show()
+                }
+        }
     }
 
+    // Função para buscar os clientes cadastrados
     fun buscarClientes(onResult: (List<String>) -> Unit) {
         val auth = FirebaseAuth.getInstance()
         val currentUser = auth.currentUser
@@ -133,10 +172,12 @@ class PostQRCodeController(private val activity: PostQRCode) {
                 .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener { querySnapshot ->
+                    // Retorna a lista de nomes dos clientes
                     val clientes = querySnapshot.documents.mapNotNull { it.getString("nome") }
                     onResult(clientes)
                 }
                 .addOnFailureListener { exception ->
+                    // Log de erro ao buscar os clientes
                     Log.e("PostQRCode", "Erro ao buscar clientes: ${exception.message}", exception)
                     onResult(emptyList())
                 }
@@ -146,6 +187,7 @@ class PostQRCodeController(private val activity: PostQRCode) {
         }
     }
 
+    // Função para atualizar o cliente associado a um barril
     fun atualizarClienteNoBarril(barrilId: String, nomeCliente: String) {
         val docRef = firestore.collection("barris").document(barrilId)
 
@@ -164,7 +206,10 @@ class PostQRCodeController(private val activity: PostQRCode) {
             }
     }
 
-    fun atualizarBarrilNoCliente(nomeCliente: String, nomeBarril: String, barrilId: String) {
+    // Função para atualizar o barril na coleção de clientes
+    fun atualizarBarrilNoCliente(nomeCliente: String, nomeBarril: String) {
+        val firestore = FirebaseFirestore.getInstance()
+
         firestore.collection("clientes")
             .whereEqualTo("nome", nomeCliente)
             .get()
@@ -173,27 +218,46 @@ class PostQRCodeController(private val activity: PostQRCode) {
                     val clienteDoc = querySnapshot.documents[0]
                     val clienteId = clienteDoc.id
 
-                    val data = hashMapOf<String, Any>(
-                        "barril" to nomeBarril
-                    )
-
-                    firestore.collection("clientes").document(clienteId)
-                        .update(data)
+                    val clienteRef = firestore.collection("clientes").document(clienteId)
+                    clienteRef.update("barril", nomeBarril)
                         .addOnSuccessListener {
-                            Toast.makeText(activity, "Cliente $nomeCliente atualizado com o barril $nomeBarril", Toast.LENGTH_SHORT).show()
+                            Log.d("PostQRCode", "Barril associado ao cliente $nomeCliente")
                         }
                         .addOnFailureListener { exception ->
-                            Toast.makeText(activity, "Erro ao atualizar cliente: ${exception.message}", Toast.LENGTH_LONG).show()
+                            Log.w("PostQRCode", "Erro ao associar barril ao cliente: ${exception.message}")
                         }
-                } else {
-                    Toast.makeText(activity, "Cliente não encontrado.", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("PostQRCode", "Erro ao buscar cliente: ${exception.message}", exception)
+                Log.w("PostQRCode", "Erro ao atualizar barril no cliente: ${exception.message}")
             }
     }
 
+    // Função para remover um barril do cliente
+    private fun removerBarrilCliente(nomeBarril: String, onResult: () -> Unit) {
+        val firestore = FirebaseFirestore.getInstance()
+
+        firestore.collection("clientes")
+            .whereEqualTo("barril", nomeBarril)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val clienteDoc = querySnapshot.documents[0]
+                    val clienteId = clienteDoc.id
+                    val clienteRef = firestore.collection("clientes").document(clienteId)
+
+                    clienteRef.update("barril", FieldValue.delete())
+                        .addOnSuccessListener {
+                            Log.d("PostQRCode", "Barril $nomeBarril removido do cliente")
+                            onResult()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("PostQRCode", "Erro ao remover barril do cliente: ${exception.message}")
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("PostQRCode", "Erro ao remover barril do cliente: ${exception.message}")
+            }
+    }
 }
-
-
