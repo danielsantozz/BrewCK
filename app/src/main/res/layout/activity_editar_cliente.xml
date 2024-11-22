@@ -92,7 +92,7 @@
             android:background="@drawable/rounded_border"
             android:ems="10"
             android:fontFamily="@font/agrandir_regular"
-            android:inputType="text"
+            android:inputType="number"
             android:paddingLeft="5sp"
             android:textColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
